@@ -11,10 +11,10 @@ import wx
 import time
 import subprocess
 
-def make_log(data, path):
+def make_out(data, path):
     #decoded_time = str(datetime.datetime.now())
-    if not os.path.exists('mewton_log'):
-        os.mkdir('mewton_log')
+    if not os.path.exists('mewton_out'):
+        os.mkdir('mewton_out')
     wb = openpyxl.Workbook()
     ws = wb.worksheets[0]
     index = ['テレメトリ', 'テレメトリID', 'ミッションモードID', 'BOBC時刻 [sec]', '異常ステータス', 'バッテリー電圧 [V]', 'バッテリー電流 [A]', 'バッテリー温度 [deg]', '-Y Deployed Solar Current [A]', '＋Y Undeployed Solar Current [A]', '＋X Solar Current [A]', '-X Solar Current [A]', '＋Y Deployed Solar [A]', '-Z Solar Current [A]', 'Tranceiver Temp [A]', 'Mission-Board Temp [deg]', '＋X Panel Temp [deg]', '＋Z Panel Temp [deg]', '＋Y Panel Temp [deg]', '-Y Panel Temp [deg]', '-X Panel Temp [deg]', '-Z Panel Temp [deg]', 'EPS1-Shunt Temp [deg]', 'TX(CW/FM) Current [A]', 'RX, Modem(RX) etc. Current [A]', 'Mission-Board 5V-Line Current [A]', 'MOBC 5V-Line Current [A]', 'Mission-Board Bus-Line Current [A]', 'Bus-System 5V-Line2 Voltage [V]', 'Bus-System Bus-Line Voltage [V]', 'RSSI [V]']
@@ -28,7 +28,7 @@ def make_log(data, path):
     filename = path.split('\\')[-1]
     filename = filename.split('.txt')[0]
     filename = filename.split('.log')[0]
-    filename = "./mewton_log/" + filename + ".xlsx"
+    filename = "./mewton_out/" + filename + ".xlsx"
     wb.save(filename)
     return filename
 
@@ -49,12 +49,12 @@ class FileDropTarget(wx.FileDropTarget):
                 telems = data_format.nyanpath(path)
             else:
                 telems = data_format.direwolf(path)
-            filename = make_log(decode.decode_FP(telems), path)
-        log_dir = os.getcwd() + '\mewton_log'
+            filename = make_out(decode.decode_FP(telems), path)
+        out_dir = os.getcwd() + '\mewton_out'
         if os.name == 'nt':
-            subprocess.run(["explorer", log_dir])
+            subprocess.run(["explorer", out_dir])
         else:
-            subprocess.run(["open", log_dir])
+            subprocess.run(["open", out_dir])
             #subprocess.run('explorer {}'.format(os.getcwd()))
         #time.sleep(1)
         #self.window.label.SetBackgroundColour("#ffc0cb")
