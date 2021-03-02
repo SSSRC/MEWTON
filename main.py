@@ -70,7 +70,8 @@ class App(wx.Frame):
 
         self.label = wx.StaticText(self.p, wx.ID_ANY, '\n\n\nMEWTON\n[NYANPATH and Direwolf Log Decoader]\n\n\n\nDrop log file(s) here (.log or .txt)\n', style=wx.SIMPLE_BORDER | wx.TE_CENTER)
         self.label.SetBackgroundColour("#ffc0cb")
-
+        font = wx.Font(15, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        self.label.SetFont(font)
         # ドロップ対象の設定
         self.label.SetDropTarget(FileDropTarget(self))
 
