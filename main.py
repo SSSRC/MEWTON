@@ -25,7 +25,7 @@ def make_log(data, path):
         for k in range(len(data[0])):
             ws.cell(i+2, k+1).value = data[i][k]
 
-    filename = path.split('/')[-1]
+    filename = path.split('\\')[-1]
     filename = filename.split('.txt')[0]
     filename = filename.split('.log')[0]
     filename = "./mewton_log/" + filename + ".xlsx"
@@ -50,7 +50,7 @@ class FileDropTarget(wx.FileDropTarget):
             else:
                 telems = data_format.direwolf(path)
             filename = make_log(decode.decode_FP(telems), path)
-        log_dir = os.getcwd() + '/mewton_log'
+        log_dir = os.getcwd() + '\mewton_log'
         if os.name == 'nt':
             subprocess.run(["explorer", log_dir])
         else:

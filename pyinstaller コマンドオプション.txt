@@ -1,1 +1,1 @@
-pyinstaller main.py --onefile --icon=mewton.ico --add-data .//mewton.ico;.
+pyinstaller main.py --onefile --noconsole --exclude numpy --exclude pandas --icon=mewton.ico --add-data .//mewton.ico;.
