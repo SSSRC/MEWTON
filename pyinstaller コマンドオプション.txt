@@ -1,1 +1,1 @@
-pyinstaller main.py --onefile --icon=MEWTON.ico --add-data .//MEWTON.ico;.
+pyinstaller main.py --onefile --icon=mewton.ico --add-data .//mewton.ico;.
