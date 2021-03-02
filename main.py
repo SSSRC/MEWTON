@@ -7,8 +7,11 @@ import openpyxl
 import os
 import data_format
 import decode
+import wx
+import time
+import subprocess
 
-def make_log(data, filename):
+def make_log(data, path):
     #decoded_time = str(datetime.datetime.now())
     if not os.path.exists('mewton_log'):
         os.mkdir('mewton_log')
@@ -22,15 +25,67 @@ def make_log(data, filename):
         for k in range(len(data[0])):
             ws.cell(i+2, k+1).value = data[i][k]
 
+    filename = path.split('/')[-1]
     filename = filename.split('.txt')[0]
-    wb.save("./mewton_log/" + filename + ".xlsx")
+    filename = filename.split('.log')[0]
+    filename = "./mewton_log/" + filename + ".xlsx"
+    wb.save(filename)
+    return filename
 
+class FileDropTarget(wx.FileDropTarget):
+    """ Drag & Drop Class """
+    def __init__(self, window):
+        wx.FileDropTarget.__init__(self)
+        self.window = window
+
+    def OnDropFiles(self, x, y, files):
+        #self.window.text_entry.SetLabel(str(files))
+        for file in files:
+            #path = input()
+            #path = 'BUS_function_AO40_GMSK9k6_2.txt'
+            path = file
+            f = open(path, 'r')
+            if f.readline()[0] == '0':
+                telems = data_format.nyanpath(path)
+            else:
+                telems = data_format.direwolf(path)
+            filename = make_log(decode.decode_FP(telems), path)
+        log_dir = os.getcwd() + '/mewton_log'
+        if os.name == 'nt':
+            subprocess.run(["explorer", log_dir])
+        else:
+            subprocess.run(["open", log_dir])
+            #subprocess.run('explorer {}'.format(os.getcwd()))
+        #time.sleep(1)
+        #self.window.label.SetBackgroundColour("#ffc0cb")
+        return 0
+
+class App(wx.Frame):
+    """ GUI """
+    def __init__(self, parent, id, title):
+        wx.Frame.__init__(self, parent, id, title, size=(500, 300), style=wx.DEFAULT_FRAME_STYLE)
+
+        # パネル
+        self.p = wx.Panel(self, wx.ID_ANY)
+
+        self.label = wx.StaticText(self.p, wx.ID_ANY, '\n\n\nMEWTON\n[NYANPATH and Direwolf Log Decoader]\n\n\n\nDrop log file(s) here (.log or .txt)\n', style=wx.SIMPLE_BORDER | wx.TE_CENTER)
+        self.label.SetBackgroundColour("#ffc0cb")
+
+        # ドロップ対象の設定
+        self.label.SetDropTarget(FileDropTarget(self))
+
+        # テキスト入力ウィジット
+        #self.text_entry = wx.TextCtrl(self.p, wx.ID_ANY)
+
+        # レイアウト
+        layout = wx.BoxSizer(wx.VERTICAL)
+        layout.Add(self.label, flag=wx.EXPAND | wx.ALL, border=10, proportion=1)
+        #layout.Add(self.text_entry, flag=wx.EXPAND | wx.ALL, border=10)
+        self.p.SetSizer(layout)
+
+        self.Show()
 
 if __name__ == '__main__':
-    print('input path:')
-    #path = input()
-    #path = 'BUS_function_AO40_GMSK9k6_2.txt'
-    path = 'bus_fuction_log_direwolf.txt'
-    #telems = data_format.nyanpath(path)
-    telems = data_format.direwolf(path)
-    make_log(decode.decode_FP(telems), path)
+    app = wx.App()
+    App(None, -1, 'MEWTON')
+    app.MainLoop()

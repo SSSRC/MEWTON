@@ -39,6 +39,10 @@ def nyanpath(path):
                     filled_bytes += 1
             elif filled_bytes == 34:
                 telem.append(byte)
+                if int(''.join(telem), 16) ==0:
+                    telem = 0
+                    filled_bytes = 0
+                    continue
                 telems.append(telem)
                 telem = []
                 filled_bytes = 0
@@ -61,7 +65,7 @@ def filter(text):
         return new_text
 
 def direwolf(path):
-    f = open(path)
+    f = open(path,'r')
     s = f.readlines()
     telem = []
     telems = []
