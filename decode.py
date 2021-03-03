@@ -4,19 +4,19 @@ from calculate_ad_data import calculate_V, calculate_bat_I, calculate_R, calcula
 
 def judge_mode(mode_num):
     if(mode_num == 0 or mode_num == 9):
-        return "antenna-expansion mode"
+        return "antenna-expansion"
     elif(mode_num == 1):
-        return "safe mode"
+        return "safe"
     elif(mode_num == 2):
-        return "heater mode"
+        return "heater"
     elif(mode_num == 3):
-        return "cw mode"
+        return "cw"
     elif(mode_num >= 4 and mode_num <= 7):
-        return "user-setting-%d mode"%(mode_num-3)
+        return "user-setting-%d"%(mode_num-3)
     elif(mode_num == 8):
-        return "command response mode"
+        return "command response"
     elif(mode_num == 10):
-        return "DR format mode"
+        return "DR format"
     else:
         return "???mode unknown???"
 
@@ -73,7 +73,7 @@ def decode_FP(bytes): #Functional Performance (機能性能)
             return -1
 
         #モードID
-        mode_id = int(byte[1], 16) % 16
+        mode_id = judge_mode(int(byte[1], 16) % 16)
 
         #BOBC時刻
         bobc_tlm = byte[2] + byte[3] + byte[4] + byte[5]
